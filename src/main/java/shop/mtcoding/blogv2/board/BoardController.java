@@ -11,7 +11,7 @@ import shop.mtcoding.blogv2.user.User;
 public class BoardController {
 
     @Autowired
-    private BoardRepository boardRepository;
+    private BoardService boardService;
 
     @GetMapping("/board/saveForm")
     public String saveForm() {
@@ -27,15 +27,21 @@ public class BoardController {
     // 4. 핵심로직 호출 (핵심로직은 서비스에서 한다. 서비스가 트랜잭션을 처리한다.)
     // 5. view or data 응답
     // 비지니스 로직또한 서비스가 한다. 비지니스 로직 ? 은행에서 출금될때 돈이 있는 지 확인하는과정 생각
+    // @PostMapping("/board/save")
+    // public String save(BoardRequest.SaveDTO saveDTO) {
+    // Board board = Board.builder()
+    // .title(saveDTO.getTitle())
+    // .content(saveDTO.getContent())
+    // .user(User.builder().id(1).build())
+    // .build();
+
+    // boardRepository.save(board);
+    // return "redirect:/";
+    // }
+
     @PostMapping("/board/save")
     public String save(BoardRequest.SaveDTO saveDTO) {
-        Board board = Board.builder()
-                .title(saveDTO.getTitle())
-                .content(saveDTO.getContent())
-                .user(User.builder().id(1).build())
-                .build();
-
-        boardRepository.save(board);
+        boardService.글쓰기(saveDTO, 1);
         return "redirect:/";
     }
 
