@@ -9,7 +9,7 @@ public class Script {
         sb.append("<script>");
         sb.append("alert('" + msg + "')");
         sb.append("history.back();");
-        sb.append("</scirpy>");
+        sb.append("</script>");
         return sb.toString();
     }
 
@@ -18,7 +18,7 @@ public class Script {
         StringBuilder sb = new StringBuilder();
         sb.append("<script>");
         sb.append("location.href='" + url + "';");
-        sb.append("</scirpy>");
+        sb.append("</script>");
         return sb.toString();
     }
 
@@ -28,7 +28,7 @@ public class Script {
         sb.append("<script>");
         sb.append("alert('" + msg + "')");
         sb.append("location.href='" + url + "';");
-        sb.append("</scirpy>");
+        sb.append("</script>");
         return sb.toString();
     }
 
