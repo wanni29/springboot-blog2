@@ -2,10 +2,16 @@ package shop.mtcoding.blogv2.board;
 
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import shop.mtcoding.blogv2.user.User;
 
@@ -44,18 +50,27 @@ public class BoardRepositoryTest {
         // Lazy로 댕겨왔을때!
         // 행 : 5개 - > 객체 : 5개
         // 각행 : Board(id = 1, title = 제목, content = 내용1, created_at = 날짜, User(id=1))
-        System.out.println(boardList.get(0).getId()); // 1번
-        System.out.println(boardList.get(0).getUser().getId()); // 1번
+        System.out.println(boardList.get(0).getId()); // 1번 (조회 x)
+        System.out.println(boardList.get(0).getUser().getId()); // 1번 (조회 x)
 
-        // 예상 : 안된다 왜? -> 레이지잖아! null이 나오겠지
+        // 예상 : 안된다 왜? -> 레이지잖아! null이 나오겠지 어? 아니네 ?
         // Lazy Loading - 지연로딩
-        // 연관된 객체에 null을 참조하려고 하면 조회가 일어남
+        // 이유 `연관된 객체에 null을 참조하려고 하면 조회가 일어남` (조회 o)
         System.out.println(boardList.get(0).getUser().getUsername());
     }
 
     @Test
     public void mFindAll_test() {
         boardRepository.mFindAll();
+    }
+
+    @Test // ObjectMapper는 boardPG의 겟터를 때리면서 JSON을 만든다.
+    public void findAll_paging_test() throws JsonProcessingException {
+        Pageable pageable = PageRequest.of(0, 3, Sort.Direction.DESC, "id");
+        Page<Board> boardPG = boardRepository.findAll(pageable);
+        ObjectMapper om = new ObjectMapper();
+        String json = om.writeValueAsString(boardPG); // 자바 객체를 JSON으로 반환
+        System.out.println(json);
     }
 
 }
