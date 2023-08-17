@@ -89,4 +89,6 @@ public class BoardController {
         return Script.href("/");
     }
 
+
+
 }

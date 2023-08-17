@@ -91,4 +91,18 @@ public class BoardRepositoryTest {
         boardRepository.deleteById(6);
     }
 
+    @Test
+    public void findById_test2() {
+        Optional<Board> boardOP = boardRepository.findById(9);
+
+        Assertions.assertThat(boardOP).isEmpty();
+
+        if (boardOP.isPresent()) {
+            System.out.println("값은 다음과 같습니다." + boardOP.get());
+        } else {
+            throw new RuntimeException("값이 없습니다.");
+        }
+
+    }
+ 
 }

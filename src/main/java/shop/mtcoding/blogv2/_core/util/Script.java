@@ -1,13 +1,13 @@
 package shop.mtcoding.blogv2._core.util;
 
-// 오버로딩 
+// 오버로딩
 public class Script {
 
-    // 경고창 + 뒤로 가기
+    // 경고창 + 뒤로가기
     public static String back(String msg) {
         StringBuilder sb = new StringBuilder();
         sb.append("<script>");
-        sb.append("alert('" + msg + "')");
+        sb.append("alert('" + msg + "');");
         sb.append("history.back();");
         sb.append("</script>");
         return sb.toString();
@@ -26,7 +26,7 @@ public class Script {
     public static String href(String url, String msg) {
         StringBuilder sb = new StringBuilder();
         sb.append("<script>");
-        sb.append("alert('" + msg + "')");
+        sb.append("alert('" + msg + "');");
         sb.append("location.href='" + url + "';");
         sb.append("</script>");
         return sb.toString();
