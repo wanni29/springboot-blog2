@@ -13,4 +13,11 @@ public class BoardRequest {
 
     }
 
+    @Getter
+    @Setter
+    public static class DetailDTO {
+        private String title;
+        private String content;
+    }
+
 }

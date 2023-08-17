@@ -1,7 +1,5 @@
 package shop.mtcoding.blogv2.board;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import shop.mtcoding.blogv2._core.util.Script;
 
 @Controller
 public class BoardController {
@@ -66,6 +67,26 @@ public class BoardController {
         Board board = boardService.상세보기(id);
         model.addAttribute("board", board); // request 랑 똑같은 역할임
         return "/board/detail";
+    }
+
+    @GetMapping("/board/{id}/updateForm")
+    public String updateForm(@PathVariable Integer id, Model model) {
+        Board board = boardService.게시물상세보기(id);
+        model.addAttribute("board", board);
+        return "/board/updateForm";
+    }
+
+    @PostMapping("/board/update")
+    public String update(@PathVariable Integer id, BoardRequest.DetailDTO detailDTO) {
+        // body 데이터, where 데이터, session 값
+        boardService.게시글수정하기(id, detailDTO);
+        return "redirect:/board/" + id;
+    }
+
+    @PostMapping("/board/{id}/delete")
+    public @ResponseBody String delete(@PathVariable Integer id) {
+        boardService.게시글삭제하기(id);
+        return Script.href("/");
     }
 
 }
