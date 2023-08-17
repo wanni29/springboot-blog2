@@ -1,6 +1,7 @@
 package shop.mtcoding.blogv2.board;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +72,17 @@ public class BoardRepositoryTest {
         ObjectMapper om = new ObjectMapper();
         String json = om.writeValueAsString(boardPG); // 자바 객체를 JSON으로 반환
         System.out.println(json);
+    }
+
+    @Test
+    public void findById_test() {
+        Optional<Board> boardOP = boardRepository.findById(5);
+
+        if (boardOP.isPresent()) { // Board 가 존재하면 !!(null 안정성)
+            System.out.println("테스트 : board가 있습니다.");
+            Board board = boardOP.get();
+            board.getUser().getEmail(); // LazyLoading
+        }
     }
 
 }

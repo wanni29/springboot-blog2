@@ -34,4 +34,9 @@ public class BoardService {
         return boardRepository.findAll(pageable);
     }
 
+    public Board 상세보기(Integer id) {
+        // board 만 가져오면 된다!!
+        return boardRepository.findById(id).get();
+    }
+
 }
