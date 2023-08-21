@@ -1,6 +1,8 @@
 package shop.mtcoding.blogv2.board;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,16 +11,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import lombok.AllArgsConstructor;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.bytebuddy.dynamic.TypeResolutionStrategy.Lazy;
+import shop.mtcoding.blogv2.reply.Reply;
 import shop.mtcoding.blogv2.user.User;
 
 @NoArgsConstructor
@@ -39,6 +42,15 @@ public class Board {
     // fetch는 프로젝션!
     @ManyToOne(fetch = FetchType.LAZY)
     private User user; // 1 + N
+
+    
+    // ManyToone Eager 전략 (디폴트)
+    // OneTomany Lazy 전략 (디폴트)
+    // OneToMany -> 양방향 맵핑
+    // "board" -> 변수명
+    // 연관관계의 주인을 설정
+    @OneToMany(mappedBy = "board") // 나는 폴인키가 아니에요 !!
+    private List<Reply> replies = new ArrayList<>();
 
     @CreationTimestamp
     private Timestamp createdAt;

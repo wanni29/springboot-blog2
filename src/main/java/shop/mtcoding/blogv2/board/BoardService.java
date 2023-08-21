@@ -75,7 +75,7 @@ public class BoardService {
     public void 게시글삭제하기(Integer id) {
         try {
             // write 다잡기
-            boardRepository.deleteById(6);
+            boardRepository.deleteById(id);
         } catch (Exception e) {
             throw new RuntimeException("6번은 없어요");
         }

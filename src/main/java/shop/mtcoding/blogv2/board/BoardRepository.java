@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /*
  *  JpaRepository 이안에 component 스캔이 들어가있어서 @Repository를 안써도 된다.
@@ -27,5 +28,9 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
     // fetch를 붙여야 전체를 프로젝션한다.
     @Query(value = "select b from Board b join fetch b.user")
     List<Board> mFindAll();
+
+
+    @Query("select b from Board b left join fetch b.replies r join fetch r.user ru where b.id = :id")
+    Board mFindByIdJoinUserAndReplies(@Param("id") Integer id);
 
 }

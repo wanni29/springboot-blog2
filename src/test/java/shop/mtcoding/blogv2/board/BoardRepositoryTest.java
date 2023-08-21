@@ -92,6 +92,11 @@ public class BoardRepositoryTest {
     }
 
     @Test
+    public void mFindByIdJoinUserAndReplies_test() {
+        boardRepository.mFindByIdJoinUserAndReplies(1);
+    }
+
+    @Test
     public void findById_test2() {
         Optional<Board> boardOP = boardRepository.findById(9);
 
