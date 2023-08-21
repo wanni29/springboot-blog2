@@ -14,6 +14,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,10 +37,12 @@ public class Reply {
     @Column(nullable = false, length = 100)
     private String comment;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+
+    @JsonIgnoreProperties({"password", "email", "createdAt"})
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Board board;
 
     @CreationTimestamp

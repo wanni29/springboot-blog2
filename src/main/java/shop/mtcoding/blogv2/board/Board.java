@@ -16,6 +16,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -40,6 +42,7 @@ public class Board {
     private String content;
 
     // fetch는 프로젝션!
+    @JsonIgnore // 제이슨으로 줄때는 이 유저 데이터는 안주겠다.
     @ManyToOne(fetch = FetchType.LAZY)
     private User user; // 1 + N
 
@@ -49,6 +52,8 @@ public class Board {
     // OneToMany -> 양방향 맵핑
     // "board" -> 변수명
     // 연관관계의 주인을 설정
+    // board, user는 orm 하지마!
+    @JsonIgnoreProperties({"board"})// 상위의 board가 아니라 리플리 안에있는 보더를 말하는거임
     @OneToMany(mappedBy = "board") // 나는 폴인키가 아니에요 !!
     private List<Reply> replies = new ArrayList<>();
 

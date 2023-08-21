@@ -20,6 +20,9 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
+    @Autowired
+    private BoardRepository boardRepository;
+
     @GetMapping("/board/saveForm")
     public String saveForm() {
         return "/board/saveForm";
@@ -69,12 +72,23 @@ public class BoardController {
         return "/board/detail";
     }
 
+    
+
+    
+    @GetMapping("/test/board/{id}")
+    public @ResponseBody Board testDetail(@PathVariable Integer id) {
+        Board board = boardRepository.mFindByIdJoinRepliesInUser(id).get();
+        return board;
+    }
+
     @GetMapping("/board/{id}/updateForm")
     public String updateForm(@PathVariable Integer id, Model model) {
         Board board = boardService.게시물상세보기(id);
         model.addAttribute("board", board);
         return "/board/updateForm";
     }
+
+    
 
     @PostMapping("/board/update")
     public String update(@PathVariable Integer id, BoardRequest.DetailDTO detailDTO) {
