@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import shop.mtcoding.blogv2._core.error.ex.MyApiException;
 import shop.mtcoding.blogv2._core.error.ex.MyException;
+import shop.mtcoding.blogv2._core.util.ApiUtil;
 import shop.mtcoding.blogv2.user.UserRequest.JoinDTO;
 import shop.mtcoding.blogv2.user.UserRequest.LoginDTO;
 import shop.mtcoding.blogv2.user.UserRequest.UpdateDTO;
@@ -17,12 +19,17 @@ public class UserService {
 
     @Transactional
     public void 회원가입(JoinDTO joinDTO) {
+        // if (joinDTO.getUsername() ==
+        // userRepository.findByUsername(joinDTO.getUsername()).getUsername()) {
+        // throw new MyApiException("중복된 유저네임입니다.");
+        // } else { }
         User user = User.builder()
                 .username(joinDTO.getUsername())
                 .password(joinDTO.getPassword())
                 .email(joinDTO.getEmail())
                 .build();
         userRepository.save(user); // 실제로는 persist() 메소드가 발동
+
     }
 
     // 쓰기를 안하니까 트랜잭션을 달필요가 없어!
@@ -58,5 +65,14 @@ public class UserService {
 
         return user;
         // 3. flush
+    }
+
+    public void 중복체크(String username) {
+        User user = userRepository.findByUsername(username);
+
+        if (user != null) {
+            throw new MyApiException("아이디가 중복되었습니다.");
+        } 
+        
     }
 }

@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import shop.mtcoding.blogv2._core.error.ex.MyException;
+import shop.mtcoding.blogv2._core.error.ex.MyApiException;
+import shop.mtcoding.blogv2._core.util.ApiUtil;
 import shop.mtcoding.blogv2._core.util.Script;
 
 //SRP => 책임을 확실히하고 과한 책임을 맡으면 안된다.
@@ -17,6 +19,9 @@ import shop.mtcoding.blogv2._core.util.Script;
 // 핵심로직 처리, 트랜잭션 관리, 예외 처리
 @Controller
 public class UserController {
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private UserService userService;
@@ -33,11 +38,15 @@ public class UserController {
 
     // M - V - C
     @PostMapping("/join")
-    public String join(UserRequest.JoinDTO joinDTO) {
-        userService.회원가입(joinDTO); // 이코드가 회원가입 비지니스로직은 서비스쪽에 위임한거임!
-        return "user/loginForm"; // persist초기화 em.clear
-        // => 초기화가 되니까 pc는 완전히 비어있는 상태에서 또다른 트랜잭션이 들어오면
-        // 깨끗한 백지상태에서 시작
+    public @ResponseBody String join(UserRequest.JoinDTO joinDTO) {
+        // 1. 인증체크
+        
+
+        // 2. 핵심 로직
+        userService.회원가입(joinDTO);
+
+        // 3. 응답
+        return Script.href("/loginForm", "회원가입 완료");
     }
 
     @GetMapping("/loginForm")
@@ -80,6 +89,13 @@ public class UserController {
     public String logout() { // 로그아웃 할시 script해서 얼랏트 창 띄울수 있음, 선택할수있음
         session.invalidate();
         return "redirect:/";
+    }
+
+
+    @PostMapping("/api/user/join")
+    public @ResponseBody ApiUtil check(@RequestBody String username) {
+        userService.중복체크(username);
+        return new ApiUtil<String>(true, "이 아이디는 생성가능한 아이디입니다.");
     }
 
 }
