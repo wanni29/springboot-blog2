@@ -11,7 +11,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import shop.mtcoding.blogv2.board.BoardRequest.DetailDTO;
+import shop.mtcoding.blogv2._core.error.ex.MyException;
+import shop.mtcoding.blogv2.reply.Reply;
+import shop.mtcoding.blogv2.reply.ReplyRepository;
 import shop.mtcoding.blogv2.user.User;
 
 @Service
@@ -19,6 +21,9 @@ public class BoardService {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private ReplyRepository replyRepository;
 
     @Transactional
     public void 글쓰기(BoardRequest.SaveDTO saveDTO, int sessionUserId) {
@@ -42,7 +47,7 @@ public class BoardService {
         if(boardOP.isPresent()) {
             return boardOP.get();
         } else {
-            throw new RuntimeException(id + "는 찾을 수 없습니다.");
+            throw new MyException(id + "는 찾을 수 없습니다.");
         }
     }
 
@@ -55,7 +60,7 @@ public class BoardService {
             board.setTitle(detailDTO.getTitle());
             board.setContent(detailDTO.getContent());
         } else {
-            throw new RuntimeException(id + "는 찾을 수 없습니다.");
+            throw new MyException(id + "는 찾을 수 없습니다.");
         }
         // 더티 체킹
 
@@ -67,17 +72,22 @@ public class BoardService {
         if (boardOP.isPresent()) {
             return boardOP.get();
         } else {
-            throw new RuntimeException(id + "는 찾을 수 없습니다.");
+            throw new MyException(id + "는 찾을 수 없습니다.");
         }
     }
 
     @Transactional
     public void 게시글삭제하기(Integer id) {
+        List<Reply> replies = replyRepository.findByBoardId(id);
+        for (Reply reply : replies) {
+            reply.setBoard(null);
+            replyRepository.save(reply);
+        }
         try {
             // write 다잡기
             boardRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException(id + "를 찾을 수 없어요");
+            throw new MyException(id + "를 찾을 수 없어요");
         }
     }
 

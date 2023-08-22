@@ -38,4 +38,3 @@ spring:
 logging:
   level:
     "[org.hibernate.type]": TRACE
-spring.mvc.pathmatch.matching-strategy: ant-path-matcher

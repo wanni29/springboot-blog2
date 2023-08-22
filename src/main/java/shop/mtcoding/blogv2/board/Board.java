@@ -54,7 +54,8 @@ public class Board {
     // 연관관계의 주인을 설정
     // board, user는 orm 하지마!
     @JsonIgnoreProperties({"board"})// 상위의 board가 아니라 리플리 안에있는 보더를 말하는거임
-    @OneToMany(mappedBy = "board") // 나는 폴인키가 아니에요 !!
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY) // 나는 폴인키가 아니에요 !!
+    // @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL) // 나는 폴인키가 아니에요 !!
     private List<Reply> replies = new ArrayList<>();
 
     @CreationTimestamp
