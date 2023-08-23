@@ -1,12 +1,17 @@
 package shop.mtcoding.blogv2.user;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import shop.mtcoding.blogv2._core.error.ex.MyApiException;
 import shop.mtcoding.blogv2._core.error.ex.MyException;
-import shop.mtcoding.blogv2._core.util.ApiUtil;
+import shop.mtcoding.blogv2._core.vo.MyPath;
 import shop.mtcoding.blogv2.user.UserRequest.JoinDTO;
 import shop.mtcoding.blogv2.user.UserRequest.LoginDTO;
 import shop.mtcoding.blogv2.user.UserRequest.UpdateDTO;
@@ -23,10 +28,27 @@ public class UserService {
         // userRepository.findByUsername(joinDTO.getUsername()).getUsername()) {
         // throw new MyApiException("중복된 유저네임입니다.");
         // } else { }
+
+        // 게시물에 사진을 등록하는 기능을 구현하기 위해선 
+        UUID uuid = UUID.randomUUID(); // 랜덤한 해시값을 만들어줌
+        String fileName = uuid+"_"+joinDTO.getPic().getOriginalFilename();
+        System.out.println("fileName : " + fileName);
+
+
+        // 프로젝트 실행 파일변경 -> blogv2-1.0.jar
+        // 해당 실행파일 경로에 images 폴더가 필요함
+        Path filePath = Paths.get(MyPath.IMG_PATH + fileName);
+        try {
+            Files.write(filePath, joinDTO.getPic().getBytes());
+        } catch (Exception e) {
+            throw new MyException(e.getMessage());
+        }
+
         User user = User.builder()
                 .username(joinDTO.getUsername())
                 .password(joinDTO.getPassword())
                 .email(joinDTO.getEmail())
+                .picUrl(fileName) // 디비에는 파일의 이름만 저장하고 경로는 저장하지말자. 아까전에 보았듯이 오에스의 환경마다 달라지니 에러가 뜬다.
                 .build();
         userRepository.save(user); // 실제로는 persist() 메소드가 발동
 
@@ -71,7 +93,7 @@ public class UserService {
         User user = userRepository.findByUsername(username);
 
         if (user != null) {
-            throw new MyApiException("아이디가 중복되었습니다.");
+          throw new MyApiException("아이디가 중복되었습니다.");
         } 
         
     }

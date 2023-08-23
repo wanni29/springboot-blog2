@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import shop.mtcoding.blogv2._core.error.ex.MyApiException;
@@ -40,7 +41,9 @@ public class UserController {
     @PostMapping("/join")
     public @ResponseBody String join(UserRequest.JoinDTO joinDTO) {
         // 1. 인증체크
-        
+        // System.out.println(joinDTO.getPic().getOriginalFilename());
+        // System.out.println(joinDTO.getPic().getSize());
+        // System.out.println(joinDTO.getPic().getContentType());
 
         // 2. 핵심 로직
         userService.회원가입(joinDTO);
@@ -92,10 +95,10 @@ public class UserController {
     }
 
 
-    @PostMapping("/api/user/join")
-    public @ResponseBody ApiUtil check(@RequestBody String username) {
+    @GetMapping("/check")
+    public @ResponseBody ApiUtil<String> check(String username) {
         userService.중복체크(username);
-        return new ApiUtil<String>(true, "이 아이디는 생성가능한 아이디입니다.");
+        return new ApiUtil<String>(true, "생성가능한 아이디입니다.");
     }
 
 }
