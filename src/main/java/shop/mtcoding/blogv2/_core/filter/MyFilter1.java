@@ -32,7 +32,7 @@ public class MyFilter1 implements Filter{
                System.out.println(" 접속자 user agent : " + req.getHeader("User-Agent"));
 
                // 2. 블랙리스트 추방
-               if(req.getHeader("User-Agent").contains("Chrome")) {
+               if(req.getHeader("User-Agent").contains("XBox")) {
                    resp.setContentType("text/html; charset=utf-8");
                    resp.setHeader("Content-Type", "text/html; charset=utf-8");
                    PrintWriter out = resp.getWriter();
